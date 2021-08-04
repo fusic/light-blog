@@ -36,7 +36,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://light.fusic.co.jp/images/logo/logo_LIGHT_256.png">
 <meta property="article:published_time" content="2021-05-06T06:32:54.000Z">
-<meta property="article:modified_time" content="2021-06-18T22:03:56.693Z">
+<meta property="article:modified_time" content="2021-08-04T05:10:44.457Z">
 <meta property="article:author" content="light">
 <meta property="article:tag" content="技術">
 <meta name="twitter:card" content="summary">
@@ -100,7 +100,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <h2 id="tl-dr"><a href="#tl-dr" class="headerlink" title="tl;dr"></a>tl;dr</h2><ul>
+        <h2><span id="tldr">tl;dr</span></h2><ul>
 <li>Unicode で異体字（ちょっと変わった字形の漢字とか）を扱うときは気をつけよう<ul>
 <li>CJK 互換漢字が含まれていたらふとしたタイミングで字形が変わることがあるよ</li>
 <li>そういうケースでも、SVS 使えばたぶん解決するよ</li>
@@ -115,7 +115,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <a id="more"></a>
 <p>こんにちは、坂井です。Unicode の話をします。なぜなら坂井は異体字が好きだからです。先日某 SNS じゃなくてマイクロブログなサービスにうっかり CJK 互換漢字を投下し、正規化されて泣きました。何を言っているんだと思われるかもしれません。しかし今回の記事はそういう話です。ざっくばらんには、変な漢字、難しい漢字、旧い漢字などをプレーンテキストでできるだけ安全に扱いたくてお勉強をした、という内容です。「役場や郵便局などで手続きしようとしたら名前の漢字の確認をされた」とかいう経験のある方にもおすすめかもしれません。</p>
 <p>以降、面倒くさいので適当な「である」調でいきます。</p>
-<h2 id="そもそも-Unicode-における漢字の扱いとは-〜お前ら似てるから一緒でいいよね〜"><a href="#そもそも-Unicode-における漢字の扱いとは-〜お前ら似てるから一緒でいいよね〜" class="headerlink" title="そもそも Unicode における漢字の扱いとは 〜お前ら似てるから一緒でいいよね〜"></a>そもそも Unicode における漢字の扱いとは 〜お前ら似てるから一緒でいいよね〜</h2><p>いろいろ調べているうちに「あ、まず Unicode における漢字の立ち位置がわからんとどうにもならん」ということに気が付いたので、まず Unicode Standard やその周辺文書をざーっと読んでみた。とりわけ異体字に関して根っこになる部分は漢字の統合 (Han Unification)、さらに言うなら「漢字はどのようにして Unicode に収録されるのか」という部分と思われるので、それについてざっくり触れる。</p>
+<h2><span id="そもそも-unicode-における漢字の扱いとは-お前ら似てるから一緒でいいよね">そもそも Unicode における漢字の扱いとは 〜お前ら似てるから一緒でいいよね〜</span></h2><p>いろいろ調べているうちに「あ、まず Unicode における漢字の立ち位置がわからんとどうにもならん」ということに気が付いたので、まず Unicode Standard やその周辺文書をざーっと読んでみた。とりわけ異体字に関して根っこになる部分は漢字の統合 (Han Unification)、さらに言うなら「漢字はどのようにして Unicode に収録されるのか」という部分と思われるので、それについてざっくり触れる。</p>
 <p>Unicode では意味 (X軸: semantic)・抽象的な形状 (Y軸: abstract shape)・書体 (Z軸: typeface) の 3 軸からなる 3 次元モデルを用意し、それぞれの漢字がどの座標に位置するかというのを見ている。UAX #38 にわかりやすい具体例が挙げられていて、例えば 貓 と 猫 はどちらも意味と発音が同じ（発音同じなのか？）だけれど抽象的な形状が違うので、X 座標は等しいが Y 座標が異なる (y-variants)。說 と 説 は意味も発音も、抽象的な形状も同じだが、stylistic variation（異体字）であって Z 座標が違う (z-variants)。本当は z-variants なペアは Unicode に存在するべきではないが、登録ミスなどが原因で存在してしまっているのが実情らしい。</p>
 <p><a href="https://www.unicode.org/versions/Unicode13.0.0/ch18.pdf#G11484" target="_blank" rel="noopener">The Unicode Standard, Version 13.0 - Principles of Han Unification</a><br><a href="https://www.unicode.org/reports/tr38/#N10211" target="_blank" rel="noopener">UAX #38: Unicode Han Database (Unihan) - 3.7 Variants</a></p>
 <p>そう、z-variants なペア、すなわち「この字はあの字の異体字」という関係性は基本的に Unicode にあってはならないという。「えぇ？」と思った方も多いのでは。特に、そこのワタナベさん。だがしかし、少しの間辛抱して聞いてほしい。</p>
@@ -142,12 +142,12 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <p><a href="https://glyphwiki.org/wiki/u8fba" target="_blank" rel="noopener">u8fba (辺) - GlyphWiki</a></p>
 <p>ああ、バリエーション豊かなワタナベさんたちはどうしたら救われるのだろう。</p>
 <p>閑話休題。最終的には近いところに行き着くにしても、この記事の本題はそこではない。</p>
-<h2 id="CJK-互換漢字とは-〜一緒じゃないんだなコレが〜"><a href="#CJK-互換漢字とは-〜一緒じゃないんだなコレが〜" class="headerlink" title="CJK 互換漢字とは 〜一緒じゃないんだなコレが〜"></a>CJK 互換漢字とは 〜一緒じゃないんだなコレが〜</h2><p>上の JEPA からの引用でも触れられているが、<strong>CJK 互換漢字 (CJK Compatibility Ideographs)</strong> というものがある。</p>
+<h2><span id="cjk-互換漢字とは-一緒じゃないんだなコレが">CJK 互換漢字とは 〜一緒じゃないんだなコレが〜</span></h2><p>上の JEPA からの引用でも触れられているが、<strong>CJK 互換漢字 (CJK Compatibility Ideographs)</strong> というものがある。</p>
 <p>「互換」というのは、漢字を Unicode に収録するときに参照した出典元と Unicode との間の互換性のこと。何らかの事情があって「この漢字を収録しておかないと、元の文字セットとのラウンドトリップ変換ができなくなっちゃう」という状況になっているが、さりとて CJK 統合漢字には入れられない、だが互換性は確保したい、そんな漢字たちが CJK 互換漢字という集合になっている。事情というのはモノによりけり、例えば韓国の文字コード規格 KS X 1001:1998 には「字形は同じだけれど発音が違う」という文字がたくさんあって、字形が同じなので Unicode 的には 1 字としたいが、でもそうすると元ネタと対応が取れなくなる……という理由で字形重複分が CJK 互換漢字に入っている。日本出身の CJK 互換漢字には JIS X 0213:2000 との互換性確保のためのものなどがいる。</p>
 <p>この漢字たちはその性質上、字形が似ていたり、一緒だったりという兄弟が CJK 統合漢字にだいたいいる（一部例外あり）。でなければ普通に CJK 統合漢字に収録されていただろうし。HTML の対応表がここにある（フォントによっては正しく表示されないかもしれない）。</p>
 <p><a href="https://unicode.org/charts/nameslist/n_F900.html" target="_blank" rel="noopener">CJK Compatibility Ideographs - unicode.org</a></p>
 <p>このように一応 CJK 漢字の一員ではあるものの、無闇矢鱈と使っていいコードポイントではないらしい。せっかく大義名分を得て Unicode に収録された異体字（や見た目は同じ字）であるのに、これらはあくまで互換性を保つためのものであって、との由。なので、ひょんなタイミングで Unicode 正規化（ざっくばらんには、検索性などの担保のために「表記揺れ」ならぬ「コードポイント揺れ」などを正す処理）が走ると CJK 統合漢字に寄せられてしまったりする。たとえ字形が多少違ったとしても。<strong>せっかくその字形として収録されているのに！</strong></p>
-<h3 id="Unicode-正規化という嵐-〜いいや、お前たちは一つになる運命〜"><a href="#Unicode-正規化という嵐-〜いいや、お前たちは一つになる運命〜" class="headerlink" title="Unicode 正規化という嵐 〜いいや、お前たちは一つになる運命〜"></a>Unicode 正規化という嵐 〜いいや、お前たちは一つになる運命〜</h3><p>具体的にどのようにいじられてしまうのか？　CJK 互換漢字については各漢字の kCompatibilityVariant プロパティに「兄弟」のコードポイントが格納されていて、それに寄せられる。UnicodeData.txt（セミコロン区切りでいろいろデータが詰め込まれているやつ）では Field 5 が kCompatibilityVariant にあたる。</p>
+<h3><span id="unicode-正規化という嵐-いいや-お前たちは一つになる運命">Unicode 正規化という嵐 〜いいや、お前たちは一つになる運命〜</span></h3><p>具体的にどのようにいじられてしまうのか？　CJK 互換漢字については各漢字の kCompatibilityVariant プロパティに「兄弟」のコードポイントが格納されていて、それに寄せられる。UnicodeData.txt（セミコロン区切りでいろいろデータが詰め込まれているやつ）では Field 5 が kCompatibilityVariant にあたる。</p>
 <p><a href="https://www.unicode.org/versions/Unicode13.0.0/ch02.pdf#page=19" target="_blank" rel="noopener">The Unicode Standard, Version 13.0 - 2.3 Compatibility Characters</a><br><a href="https://www.unicode.org/versions/Unicode13.0.0/ch05.pdf#page=50" target="_blank" rel="noopener">The Unicode Standard, Version 13.0 - 5.19 Mapping Compatibility Variants</a></p>
 <blockquote>
 <p>kCompatibilityVariant<br>The canonical Decomposition_Mapping value for the ideograph, derived from UnicodeData.txt. This field is derived by taking the non-null Decomposition_Mapping values from Field 5 of UnicodeData.txt, for characters contained within the CJK Compatibility Ideographs block and the CJK Compatibility Ideographs Supplement block.<br><a href="https://www.unicode.org/reports/tr38/index.html#kCompatibilityVariant" target="_blank" rel="noopener">UAX #38: Unicode Han Database (Unihan)</a><br><a href="https://www.unicode.org/Public/13.0.0/ucd/UnicodeData.txt" target="_blank" rel="noopener">UnicodeData.txt (unicode.org)</a></p>
@@ -156,7 +156,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <p><code>FA10;CJK COMPATIBILITY IDEOGRAPH-FA10;Lo;0;L;585A;;;;N;;;;;</code></p>
 <p>U+585A (塚) に化けるようだ。点が！！！　点が消えました！！！！！　これは困った！！！！！！！</p>
 <p>というように、「いろいろ事情があって CJK 互換漢字として収録されている」漢字はひょんなことから正しい字形を失ってしまうことがある。これが冒頭で嘆いていた「某 SNS 云々」の詳細である。確かに文字列比較などの観点からは正しいかもしれない（現に自然言語処理分野なんかではデータの前処理としてポピュラーらしい）。とはいえ、いかに Unicode さんが「成り立ちが同じならそれは同じ字だよ」としたり顔で頷いているとしても、その字形をどうしても保てないと困る、というケースはやっぱりある。この通り人名とか。あるいは使われている字形そのものが重要な情報であるような、歴史的資料であるとか。</p>
-<h3 id="SVS-という救い-〜すずと、ことりと、それからわたし〜"><a href="#SVS-という救い-〜すずと、ことりと、それからわたし〜" class="headerlink" title="SVS という救い 〜すずと、ことりと、それからわたし〜"></a>SVS という救い 〜すずと、ことりと、それからわたし〜</h3><p>やはりよろしくない、となったのか、2013 年に制定された Unicode 6.3 で CJK 互換漢字に対して <strong>Standardized Variation Sequence (SVS)</strong> が利用できるようになった。</p>
+<h3><span id="svs-という救い-すずと-ことりと-それからわたし">SVS という救い 〜すずと、ことりと、それからわたし〜</span></h3><p>やはりよろしくない、となったのか、2013 年に制定された Unicode 6.3 で CJK 互換漢字に対して <strong>Standardized Variation Sequence (SVS)</strong> が利用できるようになった。</p>
 <p><a href="https://www.unicode.org/versions/Unicode13.0.0/ch23.pdf#page=19" target="_blank" rel="noopener">The Unicode Standard, Version 13.0 - 23.4 Variation Selectors</a><br><a href="https://www.unicode.org/Public/13.0.0/ucd/StandardizedVariants.txt" target="_blank" rel="noopener">StandardizedVariants.txt (unicode.org)</a></p>
 <p>これは何かというと、<strong>異体字セレクタ (Variation Selector)</strong> なる特殊な文字を使って「この字はあの字のこのバリエーションですよ」というのを指定する仕組みのうち、Standardized Variants という対応表を使うものを指す。つまり CJK 統合漢字に異体字セレクタを添えて「この CJK 統合漢字のあの異体字」と示すことで、CJK 互換漢字にしか収録されていなかった字形も表せるようになったのだ！　これも StandardizedVariants.txt を読むととてもわかりやすい。先程の「点の付いた塚」こと U+FA10 は次のように記述されている。</p>
 <p><code>585A FE00; CJK COMPATIBILITY IDEOGRAPH-FA10;</code></p>
@@ -169,7 +169,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <p>異体字セレクタ版がなにやら面妖だけれど、納得は納得。2 字で 1 字みたいなものだし。文字列検索についてはアプリケーションによって挙動が違うので要注意だったりする。</p>
 <p>それはさておき、つまり、今やこの SVS を利用すればそれなりに安全に CJK 互換漢字で収録されたような字形が表現できる。じゃあ一件落着、と言いたいのだけれど、皆さん、コピペするときにいちいちコードポイントとか気にします？　点付きの塚が 塚 なのか 塚︀ なのか、いちいち気にするには人生は短すぎるし（※ U+FA10 と U+585A FE00（逆だったかもしれねェ……））、コピペじゃなくとも、過去のテキストファイルがどうなってるかとか、そもそも UTF-8 じゃなかったらとか、考慮していたらとてもとてもハゲるどころか死んでしまう。そして知らないうちに Unicode 正規化の嵐に巻き込まれて、意図されていた字形を失ってしまう、と。これは不幸です。割と真面目に文化の危機です。某 Web サービスで投稿時にとか、某 DTP ソフトでどうこうとか、割とそのへんに Unicode 正規化の罠はあるという（ちゃんとした裏を取っていないのでぼかしています）。ちょっと変わった漢字を扱うとき、あるいは絶対に間違えてはいけない漢字を扱うときには少し気にしたほうがよいのかもしれませんね、という話でした。</p>
 <p>ところでワタナベさんが救われていない。</p>
-<h2 id="ワタナベさんに贈る-IVS-の話"><a href="#ワタナベさんに贈る-IVS-の話" class="headerlink" title="ワタナベさんに贈る IVS の話"></a>ワタナベさんに贈る IVS の話</h2><p>ここまでは「CJK 互換漢字という形で Unicode に収録されている割に不遇な連中」の話だった。ワタナベさんが救われなかったのは「難しいナベのほとんどは、そもそも CJK 互換漢字にすら入っていない」からだ。しかしどうだ、「字形が似てればだいたい同じ字っしょ」と言っていた Unicode は俄に異体字に対しやる気を出したんじゃないか。</p>
+<h2><span id="ワタナベさんに贈る-ivs-の話">ワタナベさんに贈る IVS の話</span></h2><p>ここまでは「CJK 互換漢字という形で Unicode に収録されている割に不遇な連中」の話だった。ワタナベさんが救われなかったのは「難しいナベのほとんどは、そもそも CJK 互換漢字にすら入っていない」からだ。しかしどうだ、「字形が似てればだいたい同じ字っしょ」と言っていた Unicode は俄に異体字に対しやる気を出したんじゃないか。</p>
 <p>ここに <strong>Ideographic Variation Database (IVD)</strong> というものがある。</p>
 <blockquote>
 <p>The Ideographic Variation Database provides a registry for collections of unique variation sequences containing ideographs, allowing for standardized interchange according to UTS #37, Unicode Ideographic Variation Database.<br><a href="https://www.unicode.org/ivd/index.html" target="_blank" rel="noopener">Ideographic Variation Database</a><br><a href="https://www.unicode.org/reports/tr37/" target="_blank" rel="noopener">UTS #37: Unicode Ideographic Variation Database</a></p>
@@ -191,18 +191,18 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
 <p><img src="/images/20210506-sakai/dousite.png" alt="U+9089 から変わってないじゃん"></p>
 <p>え？</p>
 <p>これはフォントとコレクションの関係性に注意していないと起こる事故である。</p>
-<h2 id="異体字シーケンスを使うときはフォントに気を付けようという話"><a href="#異体字シーケンスを使うときはフォントに気を付けようという話" class="headerlink" title="異体字シーケンスを使うときはフォントに気を付けようという話"></a>異体字シーケンスを使うときはフォントに気を付けようという話</h2><h3 id="その1-対応フォントか要確認"><a href="#その1-対応フォントか要確認" class="headerlink" title="その1: 対応フォントか要確認"></a>その1: 対応フォントか要確認</h3><p>誰でも使いやすいのは源ノ角ゴシック (Noto Sans) 系、ヒラギノ系、游ゴシックあたり。モリサワやイワタなどのメジャーどころは対応例が多いらしい。きちんと収録内容を確認して使おう。</p>
+<h2><span id="異体字シーケンスを使うときはフォントに気を付けようという話">異体字シーケンスを使うときはフォントに気を付けようという話</span></h2><h3><span id="その1-対応フォントか要確認">その1: 対応フォントか要確認</span></h3><p>誰でも使いやすいのは源ノ角ゴシック (Noto Sans) 系、ヒラギノ系、游ゴシックあたり。モリサワやイワタなどのメジャーどころは対応例が多いらしい。きちんと収録内容を確認して使おう。</p>
 <p><a href="https://github.com/adobe-fonts/source-han-sans" target="_blank" rel="noopener">adobe-fonts/source-han-sans: Source Han Sans | 思源黑体 | 思源黑體 | 思源黑體 香港 | 源ノ角ゴシック | 본고딕</a><br><a href="https://fontnavi.jp/zakkuri/303-adobe-japan1.aspx" target="_blank" rel="noopener">Adobe-Japan1規格 - フォント専門サイト fontnavi</a></p>
 <p>そして無料だが、フォントの性格上ガチ用途に限られる IPAmj明朝。</p>
 <p><a href="https://moji.or.jp/mojikiban/font/" target="_blank" rel="noopener">IPAmj明朝フォント | 一般社団法人 文字情報技術促進協議会</a></p>
 <p>リリースノートを読んだ感じ、IPAex 系は SVS への対応のみらしい？　IPAmj明朝は普段遣いするフォントではないので、IVS 目当てで使うなら「本当にその用途」というケースに限られそう。</p>
 <p><a href="https://moji.or.jp/ipafont/releasenote00301/" target="_blank" rel="noopener">IPAex リリースノート Ver.003.01 | 一般社団法人 文字情報技術促進協議会</a></p>
 <p>ちなみに先ほどのスクリーンショットは源ノ角ゴシック。え？</p>
-<h3 id="その2-フォントによって対応コレクションが違う"><a href="#その2-フォントによって対応コレクションが違う" class="headerlink" title="その2: フォントによって対応コレクションが違う"></a>その2: フォントによって対応コレクションが違う</h3><p>源ノ角ゴシックと IPAmj明朝を例に取るなら、前者は Adobe-Japan1、後者は Moji_Joho (Hanyo-Denshi) に対応している。フォントの対応コレクションを使わないと意図した字形で表示されないのでこれまた注意が必要。</p>
+<h3><span id="その2-フォントによって対応コレクションが違う">その2: フォントによって対応コレクションが違う</span></h3><p>源ノ角ゴシックと IPAmj明朝を例に取るなら、前者は Adobe-Japan1、後者は Moji_Joho (Hanyo-Denshi) に対応している。フォントの対応コレクションを使わないと意図した字形で表示されないのでこれまた注意が必要。</p>
 <p>ところで上のスクリーンショットでは「Adobe-Japan1 にも収録されている字形を表示するのに、あえて Moji_Joho の異体字セレクタを使う」という意地悪をしている。そう、「自がハシゴでワ、ハ、口、点が 1 つのしんにょう」のナベは Adobe-Japan1 にも収録されていて、 U+9089 E0102 がそれにあたる。なのでざらっと全部表示してみると次のようになる。</p>
 <p><img src="/images/20210506-sakai/hikaku.png" alt="比較してみる"></p>
 <p>そして「その1」で挙げた対応フォント例はほとんど Adobe-Japan1 のみの対応なので、IVD はまず Adobe-Japan1 を見るべきかなぁ……と感想を抱いたあたりで、この記事は終わり！　Adobe-Japan1 にはバージョンがあるからそれにも気を付けよう！</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><ul>
+<h2><span id="結論">結論</span></h2><ul>
 <li>それ、CJK 互換漢字じゃない？　大丈夫？　SVS 使う？</li>
 <li>どうしても変換できない漢字を扱いたいときは異体字シーケンスの使用を検討しよう</li>
 <li>IVS を使うときはフォントとコレクションの対応関係に気を付けよう</li>
@@ -287,6 +287,8 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
   
     <li><a href="/categories/Yoshino/">Yoshino</a><small>4</small></li>
   
+    <li><a href="/categories/kotabe/">kotabe</a><small>1</small></li>
+  
   </ul>
 </div>
 
@@ -312,7 +314,7 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
   
     <li><a href="/tags/シェアハウス/">シェアハウス</a><small>1</small></li>
   
-    <li><a href="/tags/デザイナー/">デザイナー</a><small>1</small></li>
+    <li><a href="/tags/デザイナー/">デザイナー</a><small>2</small></li>
   
     <li><a href="/tags/ポエム/">ポエム</a><small>2</small></li>
   
@@ -324,11 +326,11 @@ CJK 互換漢字が含まれていたらふとしたタイミングで字形が�
   
     <li><a href="/tags/業務ハック/">業務ハック</a><small>1</small></li>
   
-    <li><a href="/tags/社内文化/">社内文化</a><small>5</small></li>
+    <li><a href="/tags/社内文化/">社内文化</a><small>6</small></li>
   
     <li><a href="/tags/福岡市博物館/">福岡市博物館</a><small>1</small></li>
   
-    <li><a href="/tags/雑記/">雑記</a><small>17</small></li>
+    <li><a href="/tags/雑記/">雑記</a><small>18</small></li>
   
     <li><a href="/tags/音楽/">音楽</a><small>1</small></li>
   
