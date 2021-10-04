@@ -33,7 +33,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://light.fusic.co.jp/images/logo/logo_LIGHT_256.png">
 <meta property="article:published_time" content="2021-05-11T01:36:30.000Z">
-<meta property="article:modified_time" content="2021-05-21T03:22:34.506Z">
+<meta property="article:modified_time" content="2021-06-13T09:23:22.415Z">
 <meta property="article:author" content="light">
 <meta property="article:tag" content="Laravel">
 <meta property="article:tag" content="LIGHT@NOON">
@@ -102,14 +102,14 @@
 <p>今回は、4/20(火) に開催されたチーム LIGHT 主催イベント <a href="https://fusic.connpass.com/event/209434/" target="_blank" rel="noopener">LIGHT@NOON Laravelアンチパターン編</a> の振り返り記事となっております。</p>
 <p>当日ご参加くださった皆さま、ありがとうございました〜！</p>
 <p>放送はアーカイブとして残してありますので、未視聴の方はぜひご覧ください！<br><a href="https://youtu.be/qww8M6cktFc" target="_blank" rel="noopener">https://youtu.be/qww8M6cktFc</a></p>
-<h2><span id="目次">目次</span></h2><ol>
+<h2 id="目次"><a href="#目次" class="headerlink" title="目次"></a>目次</h2><ol>
 <li>各章の補足とコメント返し</li>
 <li>感想</li>
 <li>次回予告</li>
 </ol>
 <a id="more"></a>
 
-<h2><span id="1-各章の補足とコメント返し">1. 各章の補足とコメント返し</span></h2><h3><span id="orm">ORM</span></h3><p>櫻川さんが紹介していた N+1 を検知するプラグイン<br><a href="https://github.com/beyondcode/laravel-query-detector" target="_blank" rel="noopener">https://github.com/beyondcode/laravel-query-detector</a></p>
+<h2 id="1-各章の補足とコメント返し"><a href="#1-各章の補足とコメント返し" class="headerlink" title="1. 各章の補足とコメント返し"></a>1. 各章の補足とコメント返し</h2><h3 id="ORM"><a href="#ORM" class="headerlink" title="ORM"></a>ORM</h3><p>櫻川さんが紹介していた N+1 を検知するプラグイン<br><a href="https://github.com/beyondcode/laravel-query-detector" target="_blank" rel="noopener">https://github.com/beyondcode/laravel-query-detector</a></p>
 <p>with プロパティ<br><a href="https://github.com/laravel/framework/blob/5a65f25ba37d7b60e056ce9f2268d401925b6548/src/Illuminate/Database/Eloquent/Model.php#L75" target="_blank" rel="noopener">https://github.com/laravel/framework/blob/5a65f25ba37d7b60e056ce9f2268d401925b6548/src/Illuminate/Database/Eloquent/Model.php#L75</a></p>
 <p>with メソッドを無効にする without メソッド(恐らくこれだと思われます)<br><a href="https://github.com/laravel/framework/blob/314bf875ba5d37c056ccea5148181fcb0517f596/src/Illuminate/Database/Eloquent/Model.php#L290" target="_blank" rel="noopener">https://github.com/laravel/framework/blob/314bf875ba5d37c056ccea5148181fcb0517f596/src/Illuminate/Database/Eloquent/Model.php#L290</a></p>
 <p><strong>コメント</strong></p>
@@ -122,7 +122,7 @@
 </blockquote>
 <p>FuelPHP =&gt; Laravel の順で触った人間としては、これを知ったときはなかなか衝撃的でした。<br>私個人は論理削除反対派なので、SoftDelete のお世話にはならないのですが……。</p>
 <p>こういった <strong>一定数需要があるものは手軽に実装できる</strong> のが Laravel というフレームワークの強みですよね。<br>ただし、プロジェクトの規模やメンバーの習熟度によっては、その手軽さは諸刃の刃になり得ます。<br>LIVE 中話題になった N+1 問題も、「手軽さ」によって生まれる悲劇の1つではないでしょうか。</p>
-<h3><span id="facade">Facade</span></h3><p>Facade を使わない開発についてコメント欄で紹介されていたスライド<br><a href="https://www.slideshare.net/KenjiroKubota/laravelfacade" target="_blank" rel="noopener">https://www.slideshare.net/KenjiroKubota/laravelfacade</a></p>
+<h3 id="Facade"><a href="#Facade" class="headerlink" title="Facade"></a>Facade</h3><p>Facade を使わない開発についてコメント欄で紹介されていたスライド<br><a href="https://www.slideshare.net/KenjiroKubota/laravelfacade" target="_blank" rel="noopener">https://www.slideshare.net/KenjiroKubota/laravelfacade</a></p>
 <p><strong>コメント</strong></p>
 <blockquote>
 <p>いまだにFacadeにするのか、ただのStaticなクラスを作るのかの違いがしっくりしてない</p>
@@ -136,16 +136,16 @@
 </blockquote>
 <p>とあるように、 Mockery は <strong>お勧めしていません</strong>。<br>そもそも static クラスをモックしたいと思った時点で、クラス設計に誤りのある可能性が高いです。<br>その場合には、 Facade で代替可能である、と考えたほうが良いでしょう。</p>
 <p>Laravel についてもう少し踏み込んだ理解のある方は「本当に Facade である必要があるか」も一考すべきでしょう。<br>Laravel の特徴の 1 つに、 DI(依存性注入) が容易であることがあります。<br>DI を利用することで、モック化したインスタンスを利用したテストが可能です。</p>
-<h3><span id="task-scheduling">Task Scheduling</span></h3><p>Task Scheduleing の GUI ツールとして紹介のあった Laravel-totem<br><a href="https://github.com/codestudiohq/laravel-totem" target="_blank" rel="noopener">https://github.com/codestudiohq/laravel-totem</a></p>
+<h3 id="Task-Scheduling"><a href="#Task-Scheduling" class="headerlink" title="Task Scheduling"></a>Task Scheduling</h3><p>Task Scheduleing の GUI ツールとして紹介のあった Laravel-totem<br><a href="https://github.com/codestudiohq/laravel-totem" target="_blank" rel="noopener">https://github.com/codestudiohq/laravel-totem</a></p>
 <p><strong>コメント</strong></p>
 <blockquote>
 <p>N分毎に実行したい、はアプリケーションなので、関心の分離的にもコードに落としたいですね</p>
 </blockquote>
 <p>確かに定期実行処理は、いわゆるビジネスロジックな場合が多いですね。<br>Task Scheduling は単一障害点になる、という意見もありますが、<br>アプリケーションコード全体の設計を見たときには、利用するほうが良いように思います。</p>
-<h2><span id="2-感想">2. 感想</span></h2><p>初めてのオンラインイベント、非常に緊張していましたが終始楽しくお話することができました。<br>あれから 3 週間も経っていることが信じられません（記事を書くのが遅くてすみません）。</p>
+<h2 id="2-感想"><a href="#2-感想" class="headerlink" title="2. 感想"></a>2. 感想</h2><p>初めてのオンラインイベント、非常に緊張していましたが終始楽しくお話することができました。<br>あれから 3 週間も経っていることが信じられません（記事を書くのが遅くてすみません）。</p>
 <p>司会と配信準備のすべてを担った吉野先生、<br>LIGHT@NOON のアイキャッチやロゴを考えてくれた礒谷さん、<br>当日社内 Slack でがやがや励ましてくれた坂井さん・岸田さん、<br>出演頂いた櫻川大先生、<br>そしてご視聴くださった皆様、ここまで読んでくださった皆様、ありがとうございました！</p>
 <p>この振り返り記事が、誰かの学びのヒントになれば幸いです。</p>
-<h2><span id="3-次回予告">3. 次回予告</span></h2><p>さて、次回の LIGHT@NOON は 2021/05/25 12:00〜</p>
+<h2 id="3-次回予告"><a href="#3-次回予告" class="headerlink" title="3. 次回予告"></a>3. 次回予告</h2><p>さて、次回の LIGHT@NOON は 2021/05/25 12:00〜</p>
 <p>「初めての社内デザイナー編」！</p>
 <p>我がチーム LIGHT の誇る、Fusic 唯一の Web デザイナー・礒谷悠莉さんが登壇します！</p>
 <p>エンジニア組織に 1 人飛び込んできた磯谷さんが、<br>入社から 4 ヵ月経った今、これまでの振り返りやこれからについて語ります。</p>
@@ -230,7 +230,7 @@
   
     <li><a href="/categories/Sasahira/">Sasahira</a><small>6</small></li>
   
-    <li><a href="/categories/Yoshino/">Yoshino</a><small>4</small></li>
+    <li><a href="/categories/Yoshino/">Yoshino</a><small>5</small></li>
   
     <li><a href="/categories/kotabe/">kotabe</a><small>2</small></li>
   
@@ -277,7 +277,7 @@
   
     <li><a href="/tags/福岡市博物館/">福岡市博物館</a><small>1</small></li>
   
-    <li><a href="/tags/雑記/">雑記</a><small>23</small></li>
+    <li><a href="/tags/雑記/">雑記</a><small>24</small></li>
   
     <li><a href="/tags/音楽/">音楽</a><small>1</small></li>
   
