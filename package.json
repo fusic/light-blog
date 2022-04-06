@@ -28,6 +28,6 @@
     "hexo-renderer-stylus": "^1.1.0",
     "hexo-server": "^1.0.0",
     "hexo-toc": "^1.1.0",
-    "minimist": "^1.2.3"
+    "minimist": "^1.2.6"
   }
 }
